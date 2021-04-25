@@ -8,4 +8,7 @@ import retrofit2.http.Query
 interface GithubApi {
     @GET("/search/repositories")
     fun searchRepositories(@Query("q") query: String): Call<List<Repository>>
+
+    @GET("/repositories")
+    fun getAllPublicRepositories(): Call<List<Repository>>
 }
