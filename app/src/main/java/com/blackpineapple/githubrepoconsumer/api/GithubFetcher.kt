@@ -6,7 +6,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 class GithubFetcher {
-    val githubApi: GithubApi
+    private val githubApi: GithubApi
 
     init {
         val retrofit: Retrofit = Retrofit.Builder().baseUrl("https://api.github.com/")
@@ -22,5 +22,4 @@ class GithubFetcher {
     fun getAllPublicRepositories(): Call<List<Repository>> {
         return githubApi.getAllPublicRepositories()
     }
-
 }

@@ -1,4 +1,8 @@
 package com.blackpineapple.githubrepoconsumer.data.model
 
-class Repository {
-}
+data class Repository (
+        var repoName: String = "",
+        var ownerName: String = "",
+        var ownerAvatarUrl: String = "",
+        var repoDescription: String = ""
+)
