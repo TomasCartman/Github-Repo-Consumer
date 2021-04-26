@@ -1,25 +1,43 @@
 package com.blackpineapple.githubrepoconsumer.data.repository
 
+import com.blackpineapple.githubrepoconsumer.api.GithubApi
 import com.blackpineapple.githubrepoconsumer.api.GithubFetcher
 import com.blackpineapple.githubrepoconsumer.data.model.Repository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.channels.sendBlocking
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import timber.log.Timber
-import javax.inject.Inject
 
-class GithubRepositoryImpl : GithubRepository {
-    @Inject lateinit var githubFetcher: GithubFetcher
+class GithubRepositoryImpl: GithubRepository {
+    private val githubFetcher: GithubFetcher
+
+    init {
+        val retrofit = Retrofit.Builder().baseUrl("https://api.github.com/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+        githubFetcher = GithubFetcher(retrofit.create(GithubApi::class.java))
+    }
+
 
     @ExperimentalCoroutinesApi
     override fun getPublicRepositories() = callbackFlow<Result<List<Repository>>> {
-        githubFetcher.getAllPublicRepositories().enqueue(object : Callback<List<Repository>>{
+        val callback = object : Callback<List<Repository>> {
             override fun onResponse(call: Call<List<Repository>>, response: Response<List<Repository>>) {
-                Timber.d(call.toString())
+                response.body()?.let {
+                    val repoList: List<Repository> = it
+                    Timber.d(repoList.toString())
+                    Timber.d(repoList.size.toString())
+                }
+
+                //Timber.d(response.body().toString())
+                //Timber.d(response.body()?.size.toString())
                 //sendBlocking()
             }
 
@@ -27,11 +45,18 @@ class GithubRepositoryImpl : GithubRepository {
                 Timber.d(call.toString())
                 //TODO("Not yet implemented")
             }
-        })
+        }
+
+        githubFetcher.getAllPublicRepositories().enqueue(callback)
+
+        awaitClose {
+            githubFetcher.getAllPublicRepositories().cancel()
+        }
     }
 
+    @ExperimentalCoroutinesApi
     override fun searchForRepository(query: String) = callbackFlow<Result<List<Repository>>> {
-        githubFetcher.searchRepositories(query).enqueue(object : Callback<List<Repository>> {
+        val callback = object : Callback<List<Repository>> {
             override fun onResponse(call: Call<List<Repository>>, response: Response<List<Repository>>) {
                 Timber.d(call.toString())
             }
@@ -41,6 +66,12 @@ class GithubRepositoryImpl : GithubRepository {
                 //TODO("Not yet implemented")
             }
 
-        })
+        }
+
+        githubFetcher.searchRepositories(query).enqueue(callback)
+
+        awaitClose {
+            githubFetcher.searchRepositories(query).cancel()
+        }
     }
 }

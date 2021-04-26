@@ -4,7 +4,7 @@ import com.blackpineapple.githubrepoconsumer.data.model.Repository
 import retrofit2.Call
 import javax.inject.Inject
 
-class GithubFetcher @Inject constructor(var githubApi: GithubApi) {
+class GithubFetcher(var githubApi: GithubApi) {
     //@Inject
      //lateinit var githubApi: GithubApi
 

@@ -1,8 +1,12 @@
 package com.blackpineapple.githubrepoconsumer.data.model
 
+import com.google.gson.annotations.SerializedName
+
 data class Repository (
-        var repoName: String = "",
-        var ownerName: String = "",
-        var ownerAvatarUrl: String = "",
-        var repoDescription: String = ""
+        @SerializedName("name")
+        var repoName: String,
+        @SerializedName("description")
+        var repoDescription: String,
+        @SerializedName("owner")
+        var owner: Owner
 )
