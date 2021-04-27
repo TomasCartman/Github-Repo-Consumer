@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ProgressBar
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -18,6 +19,7 @@ class RepositoryListFragment : Fragment() {
     private lateinit var binding: FragmentRepositoryListBinding
     private lateinit var viewModel: RepositoryListFragmentViewModel
     private lateinit var recyclerView: RecyclerView
+    private lateinit var progressBar: ProgressBar
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,6 +38,8 @@ class RepositoryListFragment : Fragment() {
             adapter = RepositoryListAdapter(emptyList())
         }
 
+        progressBar = binding.progressBar
+
         updateRecyclerView()
 
         return binding.root
@@ -44,6 +48,7 @@ class RepositoryListFragment : Fragment() {
     private fun updateRecyclerView() {
         viewModel.repositoryListLiveData.observe(this.viewLifecycleOwner, {
             recyclerView.adapter = RepositoryListAdapter(it)
+            progressBar.visibility = View.GONE
         })
     }
 }
