@@ -10,6 +10,7 @@ import com.blackpineapple.githubrepoconsumer.data.repository.GithubRepositoryImp
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 class RepositoryListFragmentViewModel : ViewModel() {
     private val githubRepository: GithubRepository = GithubRepositoryImpl()
@@ -28,7 +29,7 @@ class RepositoryListFragmentViewModel : ViewModel() {
                         }
                     }
                     it.isFailure -> {
-
+                        Timber.d(it.exceptionOrNull())
                     }
                 }
             }

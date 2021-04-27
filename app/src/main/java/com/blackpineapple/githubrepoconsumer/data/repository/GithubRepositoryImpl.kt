@@ -6,14 +6,12 @@ import com.blackpineapple.githubrepoconsumer.data.model.Repository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.channels.sendBlocking
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import timber.log.Timber
 
 class GithubRepositoryImpl: GithubRepository {
     private val githubFetcher: GithubFetcher
@@ -32,18 +30,12 @@ class GithubRepositoryImpl: GithubRepository {
             override fun onResponse(call: Call<List<Repository>>, response: Response<List<Repository>>) {
                 response.body()?.let {
                     val repoList: List<Repository> = it
-                    Timber.d(repoList.toString())
-                    Timber.d(repoList.size.toString())
+                    sendBlocking(Result.success(repoList))
                 }
-
-                //Timber.d(response.body().toString())
-                //Timber.d(response.body()?.size.toString())
-                //sendBlocking()
             }
 
             override fun onFailure(call: Call<List<Repository>>, t: Throwable) {
-                Timber.d(call.toString())
-                //TODO("Not yet implemented")
+               sendBlocking(Result.failure(t))
             }
         }
 
@@ -58,12 +50,14 @@ class GithubRepositoryImpl: GithubRepository {
     override fun searchForRepository(query: String) = callbackFlow<Result<List<Repository>>> {
         val callback = object : Callback<List<Repository>> {
             override fun onResponse(call: Call<List<Repository>>, response: Response<List<Repository>>) {
-                Timber.d(call.toString())
+               response.body()?.let {
+                   val repoList = it
+                   sendBlocking(Result.success(repoList))
+               }
             }
 
             override fun onFailure(call: Call<List<Repository>>, t: Throwable) {
-                Timber.d(call.toString())
-                //TODO("Not yet implemented")
+                sendBlocking(Result.failure(t))
             }
 
         }

@@ -6,24 +6,44 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
-import com.blackpineapple.githubrepoconsumer.R
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.blackpineapple.githubrepoconsumer.data.adapters.RepositoryListAdapter
+import com.blackpineapple.githubrepoconsumer.databinding.FragmentRepositoryListBinding
 import com.blackpineapple.githubrepoconsumer.viewmodels.RepositoryListFragmentViewModel
 
 
 class RepositoryListFragment : Fragment() {
+    private lateinit var binding: FragmentRepositoryListBinding
     private lateinit var viewModel: RepositoryListFragmentViewModel
+    private lateinit var recyclerView: RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel = ViewModelProvider.NewInstanceFactory()
                 .create(RepositoryListFragmentViewModel::class.java)
+        viewModel.getPublicRepositories()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = inflater.inflate(R.layout.fragment_repository_list, container, false)
+        binding = FragmentRepositoryListBinding.inflate(inflater, container, false)
 
-        viewModel.getPublicRepositories()
+        recyclerView = binding.fragmentRepositoryRecyclerView
+        recyclerView.apply {
+            layoutManager = LinearLayoutManager(context)
+            addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
+            adapter = RepositoryListAdapter(emptyList())
+        }
 
-        return view
+        updateRecyclerView()
+
+        return binding.root
+    }
+
+    private fun updateRecyclerView() {
+        viewModel.repositoryListLiveData.observe(this.viewLifecycleOwner, {
+            recyclerView.adapter = RepositoryListAdapter(it)
+        })
     }
 }
