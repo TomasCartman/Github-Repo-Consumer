@@ -47,7 +47,10 @@ class RepositoryListFragment : Fragment() {
 
     private fun updateRecyclerView() {
         viewModel.repositoryListLiveData.observe(this.viewLifecycleOwner, {
-            recyclerView.adapter = RepositoryListAdapter(it)
+            recyclerView.apply {
+                adapter = RepositoryListAdapter(it)
+                visibility = View.VISIBLE
+            }
             progressBar.visibility = View.GONE
         })
     }
