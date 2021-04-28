@@ -5,7 +5,7 @@ import retrofit2.Call
 
 class GithubFetcher(var githubApi: GithubApi) {
 
-    fun searchRepositories(query: String): Call<List<Repository>> {
+    fun searchRepositories(query: String): Call<SearchItems> {
         return githubApi.searchRepositories(query)
     }
 

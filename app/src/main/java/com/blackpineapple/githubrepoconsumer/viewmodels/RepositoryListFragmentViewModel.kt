@@ -35,4 +35,22 @@ class RepositoryListFragmentViewModel : ViewModel() {
             }
         }
     }
+
+    fun searchRepository(query: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            githubRepository.searchForRepository(query).collect {
+                when {
+                    it.isSuccess -> {
+                        val repoList = it.getOrNull()
+                        if (repoList != null) {
+                            mutableRepositoryListLiveData.postValue(repoList)
+                        }
+                    }
+                    it.isFailure -> {
+                        Timber.d(it.exceptionOrNull())
+                    }
+                }
+            }
+        }
+    }
 }
