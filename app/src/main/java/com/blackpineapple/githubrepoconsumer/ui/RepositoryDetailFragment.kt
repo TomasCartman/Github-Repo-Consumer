@@ -26,6 +26,7 @@ class RepositoryDetailFragment : Fragment() {
         context?.let {
             Glide.with(it)
                     .load(ownerAvatarUrl)
+                    .circleCrop()
                     .into(binding.ownerImageView)
         }
 

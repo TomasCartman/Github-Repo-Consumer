@@ -1,6 +1,5 @@
 <resources>
-    <string name="app_name">Github Repo Consumer</string>
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="app_name" translatable="false">Github Repo Consumer</string>
     <string name="search_raw_text">Search</string>
     <string name="repository_name_raw_text">Repository name:</string>
     <string name="owner_raw_text">Owner:</string>

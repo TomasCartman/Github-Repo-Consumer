@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="search_raw_text">Pesquisar</string>
+    <string name="repository_name_raw_text">Nome do repositório:</string>
+    <string name="owner_raw_text">Dono do repositório:</string>
+    <string name="description_raw_text">Descrição:</string>
+    <string name="repository_detail_image_description">Imagem do dono do repositório</string>
+</resources>
